@@ -2,12 +2,13 @@ const drawerWidth = 240;
 
 const styles = theme => ({
   drawerPaper: {
-    position: 'relative',
+    position: 'fixed',
     width: drawerWidth,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    overflowY: 'scroll',
   },
   drawerPaperClose: {
     overflowX: 'hidden',

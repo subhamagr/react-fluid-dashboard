@@ -6,6 +6,7 @@ const drawerWidth = 240;
 const styles = theme => ({
   appBar: {
     width: `calc(100% - ${drawerWidth}px)`,
+    position: 'fixed',
   },
   fullWidthAppBar: {
     width: `calc(100% - ${theme.spacing.unit * 7}px)`,

@@ -13,7 +13,14 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
+    marginTop: 64,
+    marginLeft: 240,
+    overflow: 'scroll',
+    maxHeight: 'calc(100vh - 120px)'
   },
+  fullWidthContent: {
+    marginLeft: 74,
+  }
 });
 
 

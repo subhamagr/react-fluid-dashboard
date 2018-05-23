@@ -21,6 +21,5 @@ export const Card = Styled.div`
 export const Page = Styled.div`
   width: 100%;
   height: 100%;
-  margin-top: 66px;
 `;
 

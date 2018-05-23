@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 
 import Header from '../../components/Header/Header';
-import styles from './Styles';
 import Sidebar from '../../components/Sidebar/Sidebar';
+import styles from './Styles';
 
 
 class PermanentDrawer extends React.Component {
@@ -20,7 +21,7 @@ class PermanentDrawer extends React.Component {
         <div className={classes.appFrame}>
           <Header open={this.state.open} handleToggle={this.handleToggle} />
           <Sidebar open={this.state.open} />
-          <main className={classes.content}>
+          <main className={classNames(classes.content, !this.state.open && classes.fullWidthContent)}>
             {this.props.renderRoutes()}
           </main>
         </div>
