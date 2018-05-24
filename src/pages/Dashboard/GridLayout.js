@@ -12,21 +12,47 @@ import 'react-resizable/css/styles.css';
 
 import { GridStyles } from './DashboardStyles';
 import HighStock from './Graphs/HighStock';
+import LineChart from './Graphs/LineChart';
+import PieChart from './Graphs/PieChart';
+import BarChart from './Graphs/BarChart';
+import AreaChart from './Graphs/AreaChart';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-
+const charts = ['Stock', 'Line', 'Pie', 'Bar', 'Area'];
 function generateLayout() {
-  return map(range(0, 3), function(item, i) {
-    var y = Math.ceil(Math.random() * 4) + 1;
-    return {
-      x: (random(0, 5) * 2) % 12,
-      y: Math.floor(i / 6) * y,
-      w: i * 2 + 2,
-      h: 10,
-      i: i.toString(),
-    };
-  });
+  var y = Math.ceil(Math.random(1) * 4) + 1;
+  return [{
+    x: 0,
+    y: 0,
+    w: 12,
+    h: 9,
+    i: charts[0],
+  }, {
+    x: 0,
+    y: 1,
+    w: 6,
+    h: 9,
+    i: charts[1],
+  }, {
+    x: 6,
+    y: 1,
+    w: 4,
+    h: 9,
+    i: charts[2],
+  }, {
+    x: 0,
+    y: 2,
+    w: 12,
+    h: 11,
+    i: charts[3],
+  }, {
+    x: 0,
+    y: 3,
+    w: 12,
+    h: 13,
+    i: charts[4],
+  }];
 }
 
 
@@ -54,7 +80,21 @@ class ShowcaseLayout extends React.Component {
     return map(this.state.layouts[this.state.currentBreakpoint] || this.state.layouts.lg, (l, i) => {
       return (
         <div key={i} className={classes.gridItem} data-grid={l}>
-          <HighStock height={l.h * this.props.rowHeight} />
+          {i === 0 && 
+            <HighStock height={l.h * this.props.rowHeight} width={l.w} />
+          }
+          {i === 1 && 
+            <LineChart height={l.h * this.props.rowHeight} width={l.w} />
+          }
+          {i === 2 && 
+            <PieChart height={l.h * this.props.rowHeight} width={l.w} />
+          }
+          {i === 3 && 
+            <BarChart height={l.h * this.props.rowHeight} width={l.w} />
+          }
+          {i === 4 && 
+            <AreaChart height={l.h * this.props.rowHeight} width={l.w} />
+          }
         </div>
       );
     });
