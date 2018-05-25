@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
-import app from './app';
+import graphs from './graphs';
 
 export default combineReducers({
-  app,
+  graphs,
 });

@@ -1,67 +1,34 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 
 import map from 'lodash/map';
-import random from 'lodash/random';
 import range from 'lodash/range';
+import isEqual from 'lodash/isEqual';
 
 import { Responsive, WidthProvider } from 'react-grid-layout';
+import { Toolbar, Button } from '@material-ui/core';
 
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
-import { GridStyles } from './DashboardStyles';
-import HighStock from './Graphs/HighStock';
 import LineChart from './Graphs/LineChart';
 import PieChart from './Graphs/PieChart';
 import BarChart from './Graphs/BarChart';
-import AreaChart from './Graphs/AreaChart';
+
+import { handleShowGraphFormDialog, handleAddGraph, initGraphs, handleUpdateGraph } from '../../store/actions/graphActions';
+
+import { GridStyles } from './DashboardStyles';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-const charts = ['Stock', 'Line', 'Pie', 'Bar', 'Area'];
-function generateLayout() {
-  var y = Math.ceil(Math.random(1) * 4) + 1;
-  return [{
-    x: 0,
-    y: 0,
-    w: 12,
-    h: 9,
-    i: charts[0],
-  }, {
-    x: 0,
-    y: 1,
-    w: 6,
-    h: 9,
-    i: charts[1],
-  }, {
-    x: 6,
-    y: 1,
-    w: 4,
-    h: 9,
-    i: charts[2],
-  }, {
-    x: 0,
-    y: 2,
-    w: 12,
-    h: 11,
-    i: charts[3],
-  }, {
-    x: 0,
-    y: 3,
-    w: 12,
-    h: 13,
-    i: charts[4],
-  }];
-}
 
-
-class ShowcaseLayout extends React.Component {
+class GridLayout extends React.Component {
   static defaultProps = {
     className: 'layout',
     rowHeight: 30,
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
-    initialLayout: generateLayout()
+    initialLayout: []
   };
 
   state = {
@@ -71,29 +38,52 @@ class ShowcaseLayout extends React.Component {
     layouts: { lg: this.props.initialLayout }
   };
 
+  componentWillMount() {
+    this.props.initGraphs();
+  }
+
   componentDidMount() {
     this.setState({ mounted: true });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(this.props.graphs.length, nextProps.graphs.length)) {
+      const newState = this.state.layouts[this.state.currentBreakpoint];
+      range(0, nextProps.graphs.length - this.props.graphs.length).forEach((p) => newState.push({
+        y: Infinity,
+        x: 0,
+        h: 9,
+        w: 7
+      }));
+      this.setState({
+        layouts: {
+          ...this.state.layouts,
+          [this.state.currentBreakpoint]: newState
+        }
+      })
+    }
   }
 
   generateDOM = () => {
     const { classes } = this.props;
     return map(this.state.layouts[this.state.currentBreakpoint] || this.state.layouts.lg, (l, i) => {
+      const config = { ...this.props.graphs[i], index: i };
+      const props = {
+        height: l.h * this.props.rowHeight,
+        width: l.w,
+        config: config,
+        onEdit: () => this.props.handleShowGraphFormDialog(true, config, this.props.handleUpdateGraph)
+      };
       return (
         <div key={i} className={classes.gridItem} data-grid={l}>
-          {i === 0 && 
-            <HighStock height={l.h * this.props.rowHeight} width={l.w} />
+          {isEqual(config.chartType, 'line') && 
+            <LineChart {...props} />
           }
-          {i === 1 && 
-            <LineChart height={l.h * this.props.rowHeight} width={l.w} />
+          {isEqual(config.chartType, 'pie') && 
+            <PieChart {...props} />
           }
-          {i === 2 && 
-            <PieChart height={l.h * this.props.rowHeight} width={l.w} />
-          }
-          {i === 3 && 
-            <BarChart height={l.h * this.props.rowHeight} width={l.w} />
-          }
-          {i === 4 && 
-            <AreaChart height={l.h * this.props.rowHeight} width={l.w} />
+          {isEqual(config.chartType, 'bar') && 
+            <BarChart {...props} />
           }
         </div>
       );
@@ -109,9 +99,17 @@ class ShowcaseLayout extends React.Component {
   onLayoutChange = (layout, layouts) => this.setState({ layouts });
 
   render() {
-    console.log(this.state.layouts);
     return (
       <div>
+        <Toolbar>
+          <Button
+            color="primary"
+            variant="raised"
+            onClick={() => this.props.handleShowGraphFormDialog(true, null, this.props.handleAddGraph)}
+          >
+            Create a new Graph
+          </Button>
+        </Toolbar>
         <ResponsiveReactGridLayout
           {...this.props}
           layouts={this.state.layouts}
@@ -121,7 +119,7 @@ class ShowcaseLayout extends React.Component {
           useCSSTransforms={this.state.mounted}
           compactType={this.state.compactType}
           preventCollision={!this.state.compactType}
-          isDraggable={false}
+          isDraggable={true}
         >
           {this.generateDOM()}
         </ResponsiveReactGridLayout>
@@ -130,4 +128,11 @@ class ShowcaseLayout extends React.Component {
   }
 }
 
-export default withStyles(GridStyles)(ShowcaseLayout);
+
+const mapStateToProps = state => ({
+  graphs: state.graphs.graphs
+});
+
+export default connect(mapStateToProps, { handleShowGraphFormDialog, handleAddGraph, initGraphs, handleUpdateGraph })(
+  withStyles(GridStyles)(GridLayout)
+);

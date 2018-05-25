@@ -1,6 +1,29 @@
 import Styled from 'styled-components';
 
 
+export const FormDialogStyles = {
+  flex: {
+    flex: 1,
+  },
+  gridContainer: {
+    padding: '8%  10%'
+  },
+  dialogContainer: {
+    background: 'rgb(245, 245, 245)',
+  },
+  fieldArrayItem: {
+    padding: '1% 5%',
+    margin: '1% 0',
+    background: 'aliceblue',
+  },
+  removeButton: {
+    marginTop: '3.8%'
+  },
+  danger: {
+    color: 'red'
+  }
+};
+
 export const Card = Styled.div`
   position: relative;
   display: -ms-flexbox;

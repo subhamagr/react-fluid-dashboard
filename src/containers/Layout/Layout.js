@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Header from '../../components/Header/Header';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import styles from './Styles';
+import GraphFormDialog from '../../components/Forms/GraphFormDialog';
 
 
 class PermanentDrawer extends React.Component {
@@ -25,6 +26,7 @@ class PermanentDrawer extends React.Component {
             {this.props.renderRoutes()}
           </main>
         </div>
+        <GraphFormDialog />
       </div>
     );
   }
