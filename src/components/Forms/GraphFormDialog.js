@@ -23,6 +23,7 @@ import TextField from '../FormElements/TextField';
 import SelectField from '../FormElements/SelectField';
 
 import PieChartSeriesArray from './PieChartSeriesArray';
+import LineSeriesArray from './LineSeriesArray';
 
 import { FormDialogStyles } from '../CommonStyles';
 
@@ -33,11 +34,11 @@ function Transition(props) {
 const COMMON_INFO_OPTIONS = [
   { label: 'Title', name: 'title', type: 'text', required: true },
   { label: 'Description', name: 'description', type: 'textarea' },
-  { label: 'Tooltip', name: 'tooltip', type: 'text' },
 ];
 
 const CHART_TYPES = [
   { label: 'Pie', value: 'pie' },
+  { label: 'Line', value: 'line' },
 ];
 
 class GraphFormDialog extends React.Component {
@@ -98,6 +99,17 @@ class GraphFormDialog extends React.Component {
                       />
                     </Grid>
                   ))}
+
+                  {values.chartType !== 'pie' &&
+                    <Grid item xs={12} sm={12}>
+                      <Field
+                        component={TextField}
+                        name="xAxisCategories"
+                        type="text"
+                        label="X-Axis Categories"
+                      />
+                    </Grid>
+                  }
                   
                   {values.chartType &&
                     <Grid item xs={12} sm={12}>
@@ -106,7 +118,12 @@ class GraphFormDialog extends React.Component {
                       </Button>
                     </Grid>
                   }
-                  <FieldArray name="series" component={PieChartSeriesArray} push={push} change={change} />
+                  <FieldArray
+                    name="series"
+                    component={values.chartType === 'pie' ? PieChartSeriesArray : LineSeriesArray}
+                    push={push}
+                    change={change}
+                  />
                 </Grid>
               </form>
             )}

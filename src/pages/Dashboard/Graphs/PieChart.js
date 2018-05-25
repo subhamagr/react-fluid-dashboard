@@ -16,9 +16,6 @@ class PieChart extends GraphContainer {
         plotShadow: false,
         type: 'pie'
       },
-      tooltip: {
-        pointFormat: config.tooltip,
-      },
       series: config.series.map(s => ({
         ...s,
         data: (s.data || []).map(d => ({
