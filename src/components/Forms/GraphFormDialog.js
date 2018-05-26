@@ -133,7 +133,7 @@ class GraphFormDialog extends React.Component {
                     </Grid>
                   }
                   
-                  {values.chartType &&
+                  {(values.chartType && values.chartType !== 'pie') &&
                     <Grid item xs={12} sm={12}>
                       <Button type="button" color="primary" variant="raised" onClick={() => push('series', {})}>
                         Add Series
