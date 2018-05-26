@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import range from 'lodash/range';
 
 import arrayMutators from 'final-form-arrays';
 import { Form, Field } from 'react-final-form';
@@ -46,6 +47,7 @@ const CHART_TYPES = [
 
 class GraphFormDialog extends React.Component {
   handleSave = (values) => {
+    if (!values.chartType) return;
     this.props.onSave(values);
     this.props.onClose();
   }
@@ -149,6 +151,31 @@ class GraphFormDialog extends React.Component {
                     push={push}
                     change={change}
                   />
+
+                  {values.chartType &&
+                    <Grid item xs={12} sm={6}>
+                      <Field
+                        required
+                        component={TextField}
+                        name="height"
+                        label="Height (1 unit = 30px)"
+                        type="number"
+                        inputProps={{ min: '4' }}
+                      />
+                    </Grid>
+                  }
+
+                  {values.chartType &&
+                    <Grid item xs={12} sm={6}>
+                      <Field
+                        required
+                        component={SelectField}
+                        name="width"
+                        label="Width (in columns)"
+                        options={range(1, 11).map(i => ({ label: i, value: i }))}
+                      />
+                    </Grid>
+                  }
                 </Grid>
               </form>
             )}

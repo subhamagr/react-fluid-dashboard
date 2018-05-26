@@ -17,6 +17,7 @@ const Field = ({ classes, input, meta, label, type, placeholder, disabled, patte
     placeholder={placeholder}
     disabled={disabled}
     pattern={pattern}
+    inputProps={props.inputProps || {}}
     InputProps={{
       disableUnderline: true,
       classes: {

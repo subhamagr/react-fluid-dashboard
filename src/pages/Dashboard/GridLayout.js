@@ -3,7 +3,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 
 import map from 'lodash/map';
-import range from 'lodash/range';
 import isEqual from 'lodash/isEqual';
 
 import { Responsive, WidthProvider } from 'react-grid-layout';
@@ -49,11 +48,13 @@ class GridLayout extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.graphs.length, nextProps.graphs.length)) {
       const newState = this.state.layouts[this.state.currentBreakpoint];
-      range(0, nextProps.graphs.length - this.props.graphs.length).forEach((p) => newState.push({
+      const diff = nextProps.graphs.length - this.props.graphs.length;
+      nextProps.graphs.slice(nextProps.graphs.length - diff).forEach((g) => newState.push({
         x: 0,
         y: Infinity,
-        h: 9,
-        w: 12
+        h: parseInt(g.height, 10),
+        w: parseInt(g.width, 10),
+        minH: 4
       }));
       this.setState({
         layouts: {
@@ -61,7 +62,30 @@ class GridLayout extends React.Component {
           [this.state.currentBreakpoint]: newState
         }
       })
+    } else if (this.props.editingChart && !nextProps.editingChart) {
+      
+      const p = nextProps.graphs[this.props.editingChart.index];
+      this.updateLayout(p, this.props.editingChart.index)
     }
+  }
+
+  updateLayout(config, index) {
+    const newState = this.state.layouts[this.state.currentBreakpoint];
+    const currentLayout = newState[index];
+    this.setState({
+      layouts: {
+        ...this.state.layouts,
+        [this.state.currentBreakpoint]: [
+          ...newState.slice(0, index),
+          {
+            ...currentLayout,
+            h: parseInt(config.height, 10),
+            w: parseInt(config.width, 10),
+          },
+          ...newState.slice(index + 1),
+        ]
+      }
+    })
   }
 
   generateDOM = () => {
@@ -69,8 +93,8 @@ class GridLayout extends React.Component {
     return map(this.state.layouts[this.state.currentBreakpoint] || this.state.layouts.lg, (l, i) => {
       const config = { ...this.props.graphs[i], index: i };
       const props = {
-        height: l.h * this.props.rowHeight,
-        width: l.w,
+        height: config.height * this.props.rowHeight,
+        width: config.width,
         config: config,
         onEdit: () => this.props.handleShowGraphFormDialog(true, config, this.props.handleUpdateGraph)
       };
@@ -98,6 +122,18 @@ class GridLayout extends React.Component {
 
   onLayoutChange = (layout, layouts) => this.setState({ layouts });
 
+  onResizeStop = (layout, oldLayoutItem, layoutItem, placeholder) => {
+    const index = parseInt(layoutItem.i, 10);
+    const currentChart = this.props.graphs[index];
+    this.props.handleUpdateGraph({
+      ...currentChart,
+      height: layoutItem.h,
+      width: layoutItem.w,
+      index
+    });
+    this.updateLayout(currentChart, index);
+  }
+
   render() {
     return (
       <div>
@@ -119,6 +155,7 @@ class GridLayout extends React.Component {
           useCSSTransforms={this.state.mounted}
           compactType={this.state.compactType}
           preventCollision={!this.state.compactType}
+          onResizeStop={this.onResizeStop}
           isDraggable={true}
         >
           {this.generateDOM()}
@@ -130,7 +167,8 @@ class GridLayout extends React.Component {
 
 
 const mapStateToProps = state => ({
-  graphs: state.graphs.graphs
+  graphs: state.graphs.graphs,
+  editingChart: state.graphs.formState.editing
 });
 
 export default connect(mapStateToProps, { handleShowGraphFormDialog, handleAddGraph, initGraphs, handleUpdateGraph })(
