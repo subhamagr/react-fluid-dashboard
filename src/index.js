@@ -13,9 +13,10 @@ import registerServiceWorker from './registerServiceWorker';
 
 import './index.css'
 
-
-const target = document.querySelector('#root')
-const history = createHistory();
+const publicUrl = new URL(process.env.PUBLIC_URL, window.location);
+const history = createHistory({
+  basename: publicUrl.pathname
+});
 
 render(
   <Provider store={store}>
@@ -23,7 +24,7 @@ render(
       <Routes />
     </Router>
   </Provider>,
-  target
+  document.querySelector('#root')
 );
 
 
