@@ -47,11 +47,13 @@ const PieChartSeriesArray = ({ fields, classes, push, change, ...props }) => {
               </Button>
             </Grid>
 
-            <Grid item xs={12} sm={2}>
-              <Button type="button" onClick={() => fields.remove(index)} className={`${classes.removeButton} ${classes.danger}`}>
-                Remove
-              </Button>
-            </Grid>
+            {fields.length > 1 && 
+              <Grid item xs={12} sm={2}>
+                <Button type="button" onClick={() => fields.remove(index)} className={`${classes.removeButton} ${classes.danger}`}>
+                  Remove
+                </Button>
+              </Grid>
+            }
             <FieldArray name={`${option}.data`} component={PieChartDataArray} />
           </Grid>
         );
