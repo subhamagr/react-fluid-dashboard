@@ -2,34 +2,37 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Button from 'material-ui/Button';
+
+import arrayMutators from 'final-form-arrays';
 import { Form, Field } from 'react-final-form';
-import arrayMutators from 'final-form-arrays'
-import { FieldArray } from 'react-final-form-arrays'
-import Dialog from 'material-ui/Dialog';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import IconButton from 'material-ui/IconButton';
-import Typography from 'material-ui/Typography';
+import { FieldArray } from 'react-final-form-arrays';
+
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import CloseIcon from '@material-ui/icons/Close';
+import Dialog from '@material-ui/core/Dialog';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
 import Slide from 'material-ui/transitions/Slide';
-import Grid from 'material-ui/Grid';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 
 import { handleShowGraphFormDialog } from '../../store/actions/graphActions';
 import CHART_INITIAL_VALUES from '../../store/chartInitialValues';
 
 import TextField from '../FormElements/TextField';
 import SelectField from '../FormElements/SelectField';
-
 import PieChartSeriesArray from './PieChartSeriesArray';
 import LineSeriesArray from './LineSeriesArray';
 
 import { FormDialogStyles } from '../CommonStyles';
 
+
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
+
 
 const COMMON_INFO_OPTIONS = [
   { label: 'Title', name: 'title', type: 'text', required: true },
@@ -55,7 +58,7 @@ class GraphFormDialog extends React.Component {
           fullScreen
           open={show}
           onClose={onClose}
-          transition={Transition}
+          TransitionComponent={Transition}
           classes={{ paper: classes.dialogContainer }}
         >
           <Form

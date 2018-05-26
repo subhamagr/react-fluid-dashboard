@@ -1,6 +1,8 @@
 import React from 'react';
 import isEqual from 'lodash/isEqual';
-import { Button, Toolbar } from '@material-ui/core';
+
+import Button from '@material-ui/core/Button';
+import Toolbar from '@material-ui/core/Toolbar';
 
 
 class GraphContainer extends React.Component {

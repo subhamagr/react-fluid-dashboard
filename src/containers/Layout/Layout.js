@@ -5,8 +5,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Header from '../../components/Header/Header';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import styles from './Styles';
 import GraphFormDialog from '../../components/Forms/GraphFormDialog';
+
+import styles from './Styles';
 
 
 class PermanentDrawer extends React.Component {

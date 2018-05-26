@@ -1,8 +1,8 @@
 import React from 'react';
 import { Field } from 'react-final-form';
-import Grid from 'material-ui/Grid';
-import Button from 'material-ui/Button';
-import { withStyles } from 'material-ui/styles';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 
 import TextField from '../FormElements/TextField';
 
