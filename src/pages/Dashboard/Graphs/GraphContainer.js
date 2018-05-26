@@ -1,6 +1,6 @@
 import React from 'react';
 import isEqual from 'lodash/isEqual';
-import { Button, Toolbar, Typography } from '@material-ui/core';
+import { Button, Toolbar } from '@material-ui/core';
 
 
 class GraphContainer extends React.Component {
@@ -23,9 +23,6 @@ class GraphContainer extends React.Component {
   renderToolbar() {
     return (
       <Toolbar>
-        <Typography variant="title" color="inherit" noWrap>
-          Dashboard
-        </Typography>
         <Button color="primary" variant="raised" onClick={this.props.onEdit}>Edit</Button>
       </Toolbar>
     );
