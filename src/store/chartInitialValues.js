@@ -4,6 +4,8 @@ export default {
     chartType: 'pie',
     height: 9,
     width: 10,
+    x: 0,
+    y: -1,
     series: [{
       name: 'Brands',
       colorByPoint: true,
@@ -20,6 +22,8 @@ export default {
     title: 'Bar Chart',
     height: 9,
     width: 10,
+    x: 0,
+    y: -1,
     xAxisCategories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].join(','),
     crosshair: true,
     tooltipShared: true,
@@ -33,6 +37,8 @@ export default {
     title: 'Line Chart',
     height: 9,
     width: 10,
+    x: 0,
+    y: 0,
     xAxisCategories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].join(','),
     series: [{
       name: 'Line 1',

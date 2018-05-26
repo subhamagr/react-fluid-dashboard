@@ -176,6 +176,30 @@ class GraphFormDialog extends React.Component {
                       />
                     </Grid>
                   }
+                  {values.chartType &&
+                    <Grid item xs={12} sm={6}>
+                      <Field
+                        required
+                        component={SelectField}
+                        name="x"
+                        label="Number of columns from left"
+                        options={range(0, 10).map(i => ({ label: `${i}`, value: i }))}
+                      />
+                    </Grid>
+                  }
+                  {values.chartType &&
+                    <Grid item xs={12} sm={6}>
+                      <Field
+                        required
+                        component={TextField}
+                        name="y"
+                        label="Number of rows from top (Enter -1 for adding at the bottom"
+                        type="number"
+                        inputProps={{ min: '-1' }}
+                      />
+                    </Grid>
+                  }
+
                 </Grid>
               </form>
             )}

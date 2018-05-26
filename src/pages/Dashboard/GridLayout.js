@@ -49,13 +49,17 @@ class GridLayout extends React.Component {
     if (!isEqual(this.props.graphs.length, nextProps.graphs.length)) {
       const newState = this.state.layouts[this.state.currentBreakpoint];
       const diff = nextProps.graphs.length - this.props.graphs.length;
-      nextProps.graphs.slice(nextProps.graphs.length - diff).forEach((g) => newState.push({
-        x: 0,
-        y: Infinity,
-        h: parseInt(g.height, 10),
-        w: parseInt(g.width, 10),
-        minH: 4
-      }));
+      nextProps.graphs.slice(nextProps.graphs.length - diff).forEach((g) => {
+        const x = parseInt(g.x, 10);
+        const y = parseInt(g.y, 10);
+        newState.push({
+          x,
+          y: y > -1 ? y : Infinity,
+          h: parseInt(g.height, 10),
+          w: parseInt(g.width, 10),
+          minH: 4
+        });
+      });
       this.setState({
         layouts: {
           ...this.state.layouts,
@@ -72,6 +76,8 @@ class GridLayout extends React.Component {
   updateLayout(config, index) {
     const newState = this.state.layouts[this.state.currentBreakpoint];
     const currentLayout = newState[index];
+    const x = parseInt(config.x, 10);
+    const y = parseInt(config.y, 10);
     this.setState({
       layouts: {
         ...this.state.layouts,
@@ -79,6 +85,8 @@ class GridLayout extends React.Component {
           ...newState.slice(0, index),
           {
             ...currentLayout,
+            x,
+            y: y > -1 ? y : Infinity,
             h: parseInt(config.height, 10),
             w: parseInt(config.width, 10),
           },
@@ -86,6 +94,31 @@ class GridLayout extends React.Component {
         ]
       }
     })
+  }
+
+  handleUpdateLayoutAndGraph = (layoutItem) => {
+    const index = parseInt(layoutItem.i, 10);
+    const currentChart = this.props.graphs[index];
+    this.props.handleUpdateGraph({
+      ...currentChart,
+      height: layoutItem.h,
+      width: layoutItem.w,
+      x: layoutItem.x,
+      y: layoutItem.y,
+      index
+    });
+    this.updateLayout(currentChart, index);
+  }
+
+  onBreakpointChange = breakpoint => {
+    this.setState({
+      currentBreakpoint: breakpoint
+    });
+  };
+
+  onLayoutChange = (layout, layouts) => {
+    layout.forEach(l => this.handleUpdateLayoutAndGraph(l))
+    this.setState({ layouts });
   }
 
   generateDOM = () => {
@@ -114,26 +147,6 @@ class GridLayout extends React.Component {
     });
   }
 
-  onBreakpointChange = breakpoint => {
-    this.setState({
-      currentBreakpoint: breakpoint
-    });
-  };
-
-  onLayoutChange = (layout, layouts) => this.setState({ layouts });
-
-  onResizeStop = (layout, oldLayoutItem, layoutItem, placeholder) => {
-    const index = parseInt(layoutItem.i, 10);
-    const currentChart = this.props.graphs[index];
-    this.props.handleUpdateGraph({
-      ...currentChart,
-      height: layoutItem.h,
-      width: layoutItem.w,
-      index
-    });
-    this.updateLayout(currentChart, index);
-  }
-
   render() {
     return (
       <div>
@@ -155,7 +168,6 @@ class GridLayout extends React.Component {
           useCSSTransforms={this.state.mounted}
           compactType={this.state.compactType}
           preventCollision={!this.state.compactType}
-          onResizeStop={this.onResizeStop}
           isDraggable={true}
         >
           {this.generateDOM()}
