@@ -33,12 +33,12 @@ function Transition(props) {
 
 const COMMON_INFO_OPTIONS = [
   { label: 'Title', name: 'title', type: 'text', required: true },
-  { label: 'Description', name: 'description', type: 'textarea' },
 ];
 
 const CHART_TYPES = [
   { label: 'Pie', value: 'pie' },
   { label: 'Line', value: 'line' },
+  { label: 'Bar', value: 'bar' },
 ];
 
 class GraphFormDialog extends React.Component {
@@ -79,6 +79,7 @@ class GraphFormDialog extends React.Component {
                   <Grid item xs={12} sm={12}>
                     <Field
                       required
+                      disabled={!!this.props.editing}
                       name="chartType"
                       component={SelectField}
                       options={CHART_TYPES}
@@ -100,7 +101,7 @@ class GraphFormDialog extends React.Component {
                     </Grid>
                   ))}
 
-                  {values.chartType !== 'pie' &&
+                  {values.chartType && values.chartType !== 'pie' &&
                     <Grid item xs={12} sm={12}>
                       <Field
                         component={TextField}
@@ -110,10 +111,31 @@ class GraphFormDialog extends React.Component {
                       />
                     </Grid>
                   }
+
+                  {values.chartType === 'bar' &&
+                    <Grid item xs={12} sm={12}>
+                      <Field
+                        component="input"
+                        name="crosshair"
+                        type="checkbox"
+                        />
+                      Cross Hair
+                    </Grid>
+                  }
+                  {values.chartType === 'bar' &&
+                    <Grid item xs={12} sm={12}>
+                      <Field
+                        component="input"
+                        name="tooltipShared"
+                        type="checkbox"
+                      />
+                      Tooltip Shared
+                    </Grid>
+                  }
                   
                   {values.chartType &&
                     <Grid item xs={12} sm={12}>
-                      <Button type="button" color="inherit" onClick={() => push('series', {})}>
+                      <Button type="button" color="primary" variant="raised" onClick={() => push('series', {})}>
                         Add Series
                       </Button>
                     </Grid>

@@ -50,10 +50,10 @@ class GridLayout extends React.Component {
     if (!isEqual(this.props.graphs.length, nextProps.graphs.length)) {
       const newState = this.state.layouts[this.state.currentBreakpoint];
       range(0, nextProps.graphs.length - this.props.graphs.length).forEach((p) => newState.push({
-        y: Infinity,
         x: 0,
+        y: Infinity,
         h: 9,
-        w: 7
+        w: 12
       }));
       this.setState({
         layouts: {
